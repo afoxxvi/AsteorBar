@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 
+@SuppressWarnings("unused")
 public class GuiHelper {
     public static void drawTexturedRect(PoseStack poseStack, int left, int top, int textureX, int textureY, int width, int height) {
         GuiComponent.blit(poseStack, left, top, textureX, textureY, width, height);
@@ -15,5 +16,9 @@ public class GuiHelper {
 
     public static void drawCenteredString(PoseStack poseStack, String string, int left, int top, int color) {
         GuiComponent.drawCenteredString(poseStack, Minecraft.getInstance().font, string, left, top, color);
+    }
+
+    public static void drawString(PoseStack poseStack, String string, int left, int top, int color) {
+        GuiComponent.drawString(poseStack, Minecraft.getInstance().font, string, left, top, color);
     }
 }

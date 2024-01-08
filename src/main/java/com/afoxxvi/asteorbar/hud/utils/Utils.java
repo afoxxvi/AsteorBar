@@ -10,4 +10,12 @@ public class Utils {
             return level < 32 ? (int) (2.5D * (double) level * (double) level - 40.5D * (double) level + 360.0D + 0.5D) : (int) (4.5D * (double) level * (double) level - 162.5D * (double) level + 2220.0D + 0.5D);
         }
     }
+
+    public static String formatNumber(double val) {
+        String str = String.format("%.1f", val);
+        if (str.endsWith(".0")) {
+            str = str.substring(0, str.length() - 2);
+        }
+        return str;
+    }
 }

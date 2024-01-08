@@ -24,7 +24,7 @@ public class AirLevelOverlay implements IGuiOverlay {
                 GuiHelper.drawTexturedRect(poseStack, left, top, 9, RenderListener.Y_AIR_BOUND, 81, 9);
                 int airWidth = 79 * air / 300;
                 GuiHelper.drawTexturedRect(poseStack, left + 81 - 1 - airWidth, top, 10, RenderListener.Y_AIR_FILL, airWidth, 9);
-                gui.rightHeight += 10;
+                gui.rightHeight += 6;
             }
         }
     }

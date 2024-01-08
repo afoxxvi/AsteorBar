@@ -15,6 +15,7 @@ public class OverlayRegister {
     private static final AirLevelOverlay AIR_LEVEL = new AirLevelOverlay();
     private static final ExperienceBarOverlay EXPERIENCE_BAR = new ExperienceBarOverlay();
     private static final MountHealthOverlay MOUNT_HEALTH = new MountHealthOverlay();
+    private static final ArmorLevelOverlay ARMOR_LEVEL = new ArmorLevelOverlay();
 
     @SubscribeEvent
     public static void registerOverlay(RegisterGuiOverlaysEvent event) {
@@ -24,5 +25,6 @@ public class OverlayRegister {
         event.registerBelow(VanillaGuiOverlay.AIR_LEVEL.id(), "air_level", AIR_LEVEL);
         event.registerBelow(VanillaGuiOverlay.EXPERIENCE_BAR.id(), "experience_bar", EXPERIENCE_BAR);
         event.registerBelow(VanillaGuiOverlay.MOUNT_HEALTH.id(), "mount_health", MOUNT_HEALTH);
+        event.registerBelow(VanillaGuiOverlay.ARMOR_LEVEL.id(), "armor_level", ARMOR_LEVEL);
     }
 }

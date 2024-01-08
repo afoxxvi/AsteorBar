@@ -18,9 +18,8 @@ public class MountHealthOverlay implements IGuiOverlay {
             Player player = (Player) gui.getMinecraft().getCameraEntity();
             if (player == null) return;
             Entity tmp = player.getVehicle();
-            if (tmp instanceof LivingEntity) {
+            if (tmp instanceof LivingEntity mount) {
                 RenderSystem.setShaderTexture(0, RenderListener.TEXTURE);
-                LivingEntity mount = (LivingEntity) tmp;
                 int left = screenWidth / 2 - 91;
                 int top = screenHeight - gui.rightHeight + 4;
                 gui.rightHeight += 12;

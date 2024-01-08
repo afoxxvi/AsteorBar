@@ -26,19 +26,24 @@ public class RenderListener {
     public static final int Y_HEALTH_WITHER_FILL = 36;
     public static final int Y_HEALTH_ABSORPTION_FILL = 45;
     public static final int Y_HEALTH_FROZEN_FILL = 135;
+    public static final int Y_HEALTH_LOW_BOUND = 180;
     public static final int Y_REGENERATION_FILL = 144;
 
     public static final int Y_FOOD_EMPTY_BAR = 54;
     public static final int Y_FOOD_BLINK_BOUND = 63;
     public static final int Y_FOOD_NORMAL_FILL = 72;
-    public static final int Y_MOUNT_HEALTH_BAR = 153;
-    public static final int Y_MOUNT_HEALTH_FILL = 162;
     public static final int Y_SATURATION_BOUND = 81;
     public static final int Y_FOOD_HUNGER_FILL = 90;
+    public static final int Y_FOOD_EXHAUSTION_FILL = 171;
+    public static final int Y_MOUNT_HEALTH_BAR = 153;
+    public static final int Y_MOUNT_HEALTH_FILL = 162;
     public static final int Y_EXPERIENCE_EMPTY_BAR = 99;
     public static final int Y_EXPERIENCE_BAR = 108;
     public static final int Y_AIR_BOUND = 117;
     public static final int Y_AIR_FILL = 126;
+    public static final int Y_ARMOR_EMPTY_BAR = 189;
+    public static final int Y_ARMOR_BAR = 198;
+    public static final int Y_ARMOR_BOUND = 207;
     public static long tickCount = 0L;
 
     @SubscribeEvent
@@ -49,7 +54,7 @@ public class RenderListener {
     }
 
     @SubscribeEvent
-    public static void onEntityRender(RenderLivingEvent event) {
+    public static void onEntityRender(RenderLivingEvent<?, ?> event) {
 
     }
 
@@ -63,26 +68,14 @@ public class RenderListener {
             set.add(name);
             AsteorBar.LOGGER.info(name);
         }
-        if (overlay == VanillaGuiOverlay.PLAYER_HEALTH.type()) {
+        if (overlay == VanillaGuiOverlay.PLAYER_HEALTH.type()
+                || overlay == VanillaGuiOverlay.FOOD_LEVEL.type()
+                || overlay == VanillaGuiOverlay.AIR_LEVEL.type()
+                || (AsteorBar.Config.OVERWRITE_VANILLA_EXPERIENCE_BAR.get() && overlay == VanillaGuiOverlay.EXPERIENCE_BAR.type())
+                || overlay == VanillaGuiOverlay.MOUNT_HEALTH.type()
+                || (AsteorBar.Config.OVERWRITE_VANILLA_ARMOR_BAR.get() && overlay == VanillaGuiOverlay.ARMOR_LEVEL.type())
+        ) {
             event.setCanceled(true);
-            return;
         }
-        if (overlay == VanillaGuiOverlay.FOOD_LEVEL.type()) {
-            event.setCanceled(true);
-            return;
-        }
-        if (overlay == VanillaGuiOverlay.AIR_LEVEL.type()) {
-            event.setCanceled(true);
-            return;
-        }
-        if (overlay == VanillaGuiOverlay.EXPERIENCE_BAR.type()) {
-            event.setCanceled(true);
-            return;
-        }
-        if (overlay == VanillaGuiOverlay.MOUNT_HEALTH.type()) {
-            event.setCanceled(true);
-            return;
-        }
-        return;
     }
 }
