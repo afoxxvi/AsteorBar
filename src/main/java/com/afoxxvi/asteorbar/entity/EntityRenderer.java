@@ -6,19 +6,13 @@ import com.afoxxvi.asteorbar.utils.Utils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.common.Tags;
 
 public class EntityRenderer {
-    private static final TagKey<EntityType<?>> FORGE_BOSS_TAG = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("forge", "bosses"));
-
     private static boolean isBoss(LivingEntity entity) {
-        return entity.getType().is(FORGE_BOSS_TAG);
+        return entity.getType().is(Tags.EntityTypes.BOSSES);
     }
 
     private static int check(LivingEntity entity, Player player) {
@@ -59,7 +53,7 @@ public class EntityRenderer {
             {//render health bar
                 var healthRate = Math.min(entity.getHealth() / entity.getMaxHealth(), 1.0);
                 var healthWidth = (int) (halfWidth * 2 * healthRate);
-                var bufferBuilder = multiBufferSource.getBuffer(RenderType.debugQuads());
+                var bufferBuilder = multiBufferSource.getBuffer(AsteorBarRenderType.RENDER_TYPE);
                 int colorHealth;
                 if (AsteorBar.Config.HEALTH_BAR_HEALTH_COLOR_DYNAMIC.get()) {
                     colorHealth = Utils.mixColor(AsteorBar.Config.HEALTH_BAR_HEALTH_COLOR_FULL.get(), AsteorBar.Config.HEALTH_BAR_HEALTH_COLOR_EMPTY.get(), healthRate);
@@ -86,7 +80,7 @@ public class EntityRenderer {
                     absorptionWidth = 2 * halfWidth + 2;
                     absorptionNum--;
                 }
-                var bufferBuilder = multiBufferSource.getBuffer(RenderType.debugQuads());
+                var bufferBuilder = multiBufferSource.getBuffer(AsteorBarRenderType.RENDER_TYPE);
                 var cut = 0;
                 final var boundWidth = AsteorBar.Config.HEALTH_BAR_BOUND_WIDTH.get();
                 var expand = AsteorBar.Config.HEALTH_BAR_BOUND_VERTEX.get() ? boundWidth : 0;
