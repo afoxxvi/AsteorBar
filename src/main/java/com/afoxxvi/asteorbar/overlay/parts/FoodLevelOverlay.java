@@ -8,7 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.food.FoodData;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.ForgeIngameGui;
 
 import static com.afoxxvi.asteorbar.core.listener.ForgeEventListener.tickCount;
 
@@ -34,14 +34,14 @@ public class FoodLevelOverlay extends BaseOverlay {
     }
 
     @Override
-    public void renderOverlay(ForgeGui gui, PoseStack poseStack, float partialTick, int screenWidth, int screenHeight) {
-        var player = gui.getMinecraft().player;
+    public void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTick, int screenWidth, int screenHeight) {
+        var player = mc.player;
         if (player == null) return;
         boolean isMounted = player.getVehicle() instanceof LivingEntity;
-        if (!isMounted && !gui.getMinecraft().options.hideGui && gui.shouldDrawSurvivalElements()) {
+        if (!isMounted && !mc.options.hideGui && gui.shouldDrawSurvivalElements()) {
             gui.setupOverlayRenderState(true, false);
             RenderSystem.setShaderTexture(0, TEXTURE);
-            FoodData stats = gui.getMinecraft().player.getFoodData();
+            FoodData stats = mc.player.getFoodData();
             int level = stats.getFoodLevel();
             //see NetworkHandler, without sync this field is always 0
             float saturation = stats.getSaturationLevel();
@@ -64,14 +64,14 @@ public class FoodLevelOverlay extends BaseOverlay {
                 }
                 case Overlays.STYLE_ABOVE_HOT_BAR_LONG -> {
                     int left = screenWidth / 2 - 91;
-                    int top = screenHeight - gui.rightHeight + 4;
-                    gui.rightHeight += 12;
+                    int top = screenHeight - gui.right_height + 4;
+                    gui.right_height += 12;
                     draw(poseStack, left, top, left + BOUND_FULL_WIDTH_LONG, top + 5, foodBlinkTime > 0, foodType, level, saturation, exhaustion, false);
                 }
                 case Overlays.STYLE_ABOVE_HOT_BAR_SHORT -> {
                     int left = screenWidth / 2 + 10;
-                    int top = screenHeight - gui.rightHeight + 4;
-                    gui.rightHeight += 6;
+                    int top = screenHeight - gui.right_height + 4;
+                    gui.right_height += 6;
                     draw(poseStack, left, top, left + BOUND_FULL_WIDTH_SHORT, top + 5, foodBlinkTime > 0, foodType, level, saturation, exhaustion, true);
                 }
                 case Overlays.STYLE_TOP_LEFT -> {

@@ -7,10 +7,9 @@ import com.afoxxvi.asteorbar.overlay.Overlays;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.client.event.RenderGuiOverlayEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.client.gui.overlay.NamedGuiOverlay;
-import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
+import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -34,19 +33,31 @@ public class ForgeEventListener {
     }
 
     @SubscribeEvent
-    public static void disableVanillaOverlays(RenderGuiOverlayEvent.Pre event) {
+    public static void onRenderPre(RenderGameOverlayEvent.Pre event) {
+        if (event.getType() == RenderGameOverlayEvent.ElementType.ALL) {
+            if (!ModEventListener.registerOverlay) ModEventListener.registerOverlays();
+        }
+    }
+
+    @SubscribeEvent
+    public static void disableVanillaOverlays(RenderGameOverlayEvent.PreLayer event) {
         if (!AsteorBar.Config.ENABLE_OVERLAY.get()) return;
-        NamedGuiOverlay overlay = event.getOverlay();
-        if (overlay == VanillaGuiOverlay.VIGNETTE.type()) {
+        var overlay = event.getOverlay();
+        if (overlay == ForgeIngameGui.VIGNETTE_ELEMENT) {
             Overlays.reset();
         }
-        if (overlay == VanillaGuiOverlay.PLAYER_HEALTH.type() || overlay == VanillaGuiOverlay.FOOD_LEVEL.type() || overlay == VanillaGuiOverlay.AIR_LEVEL.type() || (AsteorBar.Config.OVERWRITE_VANILLA_EXPERIENCE_BAR.get() && overlay == VanillaGuiOverlay.EXPERIENCE_BAR.type()) || overlay == VanillaGuiOverlay.MOUNT_HEALTH.type() || (AsteorBar.Config.OVERWRITE_VANILLA_ARMOR_BAR.get() && overlay == VanillaGuiOverlay.ARMOR_LEVEL.type())) {
+        if (overlay == ForgeIngameGui.PLAYER_HEALTH_ELEMENT
+                || overlay == ForgeIngameGui.FOOD_LEVEL_ELEMENT
+                || overlay == ForgeIngameGui.AIR_LEVEL_ELEMENT
+                || (AsteorBar.Config.OVERWRITE_VANILLA_EXPERIENCE_BAR.get() && overlay == ForgeIngameGui.EXPERIENCE_BAR_ELEMENT)
+                || overlay == ForgeIngameGui.MOUNT_HEALTH_ELEMENT
+                || (AsteorBar.Config.OVERWRITE_VANILLA_ARMOR_BAR.get() && overlay == ForgeIngameGui.ARMOR_LEVEL_ELEMENT)) {
             event.setCanceled(true);
         }
     }
 
     @SubscribeEvent
-    public static void handleKeyInput(InputEvent.Key event) {
+    public static void handleKeyInput(InputEvent.KeyInputEvent event) {
         while (KeyBinding.TOGGLE_OVERLAY.consumeClick()) {
             Overlays.style = (Overlays.style + 1) % Overlays.NUM_STYLES;
             AsteorBar.Config.ENABLE_OVERLAY.set(Overlays.style != Overlays.STYLE_NONE);

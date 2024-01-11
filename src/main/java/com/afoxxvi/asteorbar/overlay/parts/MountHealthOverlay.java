@@ -7,7 +7,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.ForgeIngameGui;
 
 public class MountHealthOverlay extends BaseOverlay {
     private void draw(PoseStack poseStack, int left, int top, int right, int bottom, float health, float healthMax, boolean flip) {
@@ -17,10 +17,10 @@ public class MountHealthOverlay extends BaseOverlay {
     }
 
     @Override
-    public void renderOverlay(ForgeGui gui, PoseStack poseStack, float partialTick, int screenWidth, int screenHeight) {
-        if (!gui.getMinecraft().options.hideGui && gui.shouldDrawSurvivalElements()) {
+    public void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTick, int screenWidth, int screenHeight) {
+        if (!mc.options.hideGui && gui.shouldDrawSurvivalElements()) {
             gui.setupOverlayRenderState(true, false);
-            Player player = (Player) gui.getMinecraft().getCameraEntity();
+            Player player = (Player) mc.getCameraEntity();
             if (player == null) return;
             Entity tmp = player.getVehicle();
             if (tmp instanceof LivingEntity mount) {
@@ -33,14 +33,14 @@ public class MountHealthOverlay extends BaseOverlay {
                     }
                     case Overlays.STYLE_ABOVE_HOT_BAR_LONG -> {
                         int left = screenWidth / 2 - 91;
-                        int top = screenHeight - gui.rightHeight + 4;
-                        gui.rightHeight += 12;
+                        int top = screenHeight - gui.right_height + 4;
+                        gui.right_height += 12;
                         draw(poseStack, left, top, left + BOUND_FULL_WIDTH_LONG, top + 5, health, healthMax, false);
                     }
                     case Overlays.STYLE_ABOVE_HOT_BAR_SHORT -> {
                         int left = screenWidth / 2 + 10;
-                        int top = screenHeight - gui.rightHeight + 4;
-                        gui.rightHeight += 6;
+                        int top = screenHeight - gui.right_height + 4;
+                        gui.right_height += 6;
                         draw(poseStack, left, top, left + BOUND_FULL_WIDTH_SHORT, top + 5, health, healthMax, true);
                     }
                     case Overlays.STYLE_TOP_LEFT -> {

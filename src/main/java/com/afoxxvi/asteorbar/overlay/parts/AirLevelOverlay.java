@@ -4,7 +4,9 @@ import com.afoxxvi.asteorbar.overlay.Overlays;
 import com.afoxxvi.asteorbar.utils.GuiHelper;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraft.client.Minecraft;
+import net.minecraft.tags.FluidTags;
+import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.common.ForgeMod;
 
 public class AirLevelOverlay extends BaseOverlay {
@@ -15,14 +17,14 @@ public class AirLevelOverlay extends BaseOverlay {
     }
 
     @Override
-    public void renderOverlay(ForgeGui gui, PoseStack poseStack, float partialTick, int screenWidth, int screenHeight) {
-        if (!gui.getMinecraft().options.hideGui && gui.shouldDrawSurvivalElements()) {
+    public void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTick, int screenWidth, int screenHeight) {
+        if (!mc.options.hideGui && gui.shouldDrawSurvivalElements()) {
             gui.setupOverlayRenderState(true, false);
             RenderSystem.setShaderTexture(0, TEXTURE);
-            var player = gui.getMinecraft().player;
+            var player = mc.player;
             if (player == null) return;
             int air = player.getAirSupply();
-            if (!(player.isEyeInFluidType(ForgeMod.WATER_TYPE.get()) || air < 300)) {
+            if (!(player.isEyeInFluid(FluidTags.WATER) || air < 300)) {
                 return;
             }
             switch (Overlays.style) {
@@ -31,8 +33,8 @@ public class AirLevelOverlay extends BaseOverlay {
                 }
                 default -> {
                     int left = screenWidth / 2 + 10;
-                    int top = screenHeight - gui.rightHeight + 4;
-                    gui.rightHeight += 6;
+                    int top = screenHeight - gui.right_height + 4;
+                    gui.right_height += 6;
                     draw(poseStack, left, top, left + BOUND_FULL_WIDTH_SHORT, top + 5, air, true);
                 }
             }

@@ -8,8 +8,9 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.ForgeIngameGui;
 
 import static com.afoxxvi.asteorbar.core.listener.ForgeEventListener.tickCount;
 
@@ -71,12 +72,11 @@ public class PlayerHealthOverlay extends BaseOverlay {
     }
 
     @Override
-    public void renderOverlay(ForgeGui gui, PoseStack poseStack, float partialTick, int screenWidth, int screenHeight) {
-        if (!gui.getMinecraft().options.hideGui && gui.shouldDrawSurvivalElements()) {
+    public void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTick, int screenWidth, int screenHeight) {
+        if (!mc.options.hideGui && gui.shouldDrawSurvivalElements()) {
             gui.setupOverlayRenderState(true, false);
             RenderSystem.enableBlend();
             RenderSystem.setShaderTexture(0, TEXTURE);
-            var mc = gui.getMinecraft();
             var player = mc.player;
             if (player == null) return;
             float health = player.getHealth();
@@ -121,15 +121,15 @@ public class PlayerHealthOverlay extends BaseOverlay {
 
                 }
                 case Overlays.STYLE_ABOVE_HOT_BAR_LONG -> {
-                    int top = screenHeight - gui.leftHeight - 2;
+                    int top = screenHeight - gui.left_height - 2;
                     int left = screenWidth / 2 - 91;
-                    gui.leftHeight += 12;
+                    gui.left_height += 12;
                     draw(poseStack, left, top, left + BOUND_FULL_WIDTH_LONG, top + 5, highlight, healthType, health, absorb, maxHealth, flashAlpha, regenerationOffset, hp, false);
                 }
                 case Overlays.STYLE_ABOVE_HOT_BAR_SHORT -> {
-                    int top = screenHeight - gui.leftHeight + 4;
+                    int top = screenHeight - gui.left_height + 4;
                     int left = screenWidth / 2 - 91;
-                    gui.leftHeight += 6;
+                    gui.left_height += 6;
                     draw(poseStack, left, top, left + BOUND_FULL_WIDTH_SHORT, top + 5, highlight, healthType, health, absorb, maxHealth, flashAlpha, regenerationOffset, hp, false);
                 }
                 case Overlays.STYLE_TOP_LEFT -> {

@@ -6,7 +6,7 @@ import com.afoxxvi.asteorbar.utils.GuiHelper;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.ForgeIngameGui;
 
 public class ArmorLevelOverlay extends BaseOverlay {
     private void draw(PoseStack poseStack, int left, int top, int right, int bottom, int armor, double armorToughness, boolean flip) {
@@ -20,11 +20,11 @@ public class ArmorLevelOverlay extends BaseOverlay {
     }
 
     @Override
-    public void renderOverlay(ForgeGui gui, PoseStack poseStack, float partialTick, int screenWidth, int screenHeight) {
-        if (!gui.getMinecraft().options.hideGui && gui.shouldDrawSurvivalElements() && AsteorBar.Config.OVERWRITE_VANILLA_ARMOR_BAR.get()) {
+    public void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTick, int screenWidth, int screenHeight) {
+        if (!mc.options.hideGui && gui.shouldDrawSurvivalElements() && AsteorBar.Config.OVERWRITE_VANILLA_ARMOR_BAR.get()) {
             gui.setupOverlayRenderState(true, false);
             RenderSystem.setShaderTexture(0, TEXTURE);
-            var player = gui.getMinecraft().player;
+            var player = mc.player;
             if (player == null) return;
             int armor = player.getArmorValue();
             if (armor <= 0) return;
@@ -39,8 +39,8 @@ public class ArmorLevelOverlay extends BaseOverlay {
                 }
                 case Overlays.STYLE_ABOVE_HOT_BAR_LONG, Overlays.STYLE_ABOVE_HOT_BAR_SHORT -> {
                     int left = screenWidth / 2 - 91;
-                    int top = screenHeight - gui.leftHeight + 4;
-                    gui.leftHeight += 6;
+                    int top = screenHeight - gui.left_height + 4;
+                    gui.left_height += 6;
                     draw(poseStack, left, top, left + BOUND_FULL_WIDTH_SHORT, top + 5, armor, armorToughness, false);
                 }
                 case Overlays.STYLE_TOP_LEFT -> {

@@ -3,11 +3,12 @@ package com.afoxxvi.asteorbar.overlay.parts;
 import com.afoxxvi.asteorbar.AsteorBar;
 import com.afoxxvi.asteorbar.utils.GuiHelper;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
-import net.minecraftforge.client.gui.overlay.IGuiOverlay;
+import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.client.gui.IIngameOverlay;
 
-public abstract class BaseOverlay implements IGuiOverlay {
+public abstract class BaseOverlay implements IIngameOverlay {
     public static final ResourceLocation TEXTURE = new ResourceLocation(AsteorBar.MOD_ID, "textures/gui/overlay.png");
     public static final int FILL_FULL_WIDTH_LONG = 180;
     public static final int BOUND_FULL_WIDTH_LONG = 182;
@@ -37,11 +38,13 @@ public abstract class BaseOverlay implements IGuiOverlay {
     public static final int Y_ARMOR_EMPTY_BAR = 189;
     public static final int Y_ARMOR_BAR = 198;
     public static final int Y_ARMOR_BOUND = 207;
+    protected Minecraft mc;
 
     @Override
-    public void render(ForgeGui forgeGui, PoseStack poseStack, float v, int i, int i1) {
+    public void render(ForgeIngameGui forgeGui, PoseStack poseStack, float v, int i, int i1) {
         if (AsteorBar.Config.ENABLE_OVERLAY.get()) {
             GuiHelper.guiComponent = forgeGui;
+            mc = Minecraft.getInstance();
             renderOverlay(forgeGui, poseStack, v, i, i1);
         }
     }
@@ -105,5 +108,5 @@ public abstract class BaseOverlay implements IGuiOverlay {
         }
     }
 
-    public abstract void renderOverlay(ForgeGui forgeGui, PoseStack poseStack, float v, int i, int i1);
+    public abstract void renderOverlay(ForgeIngameGui forgeGui, PoseStack poseStack, float v, int i, int i1);
 }

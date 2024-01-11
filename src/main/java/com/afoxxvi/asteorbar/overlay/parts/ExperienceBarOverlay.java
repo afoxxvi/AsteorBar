@@ -6,7 +6,7 @@ import com.afoxxvi.asteorbar.utils.Utils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Font;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.ForgeIngameGui;
 
 public class ExperienceBarOverlay extends BaseOverlay {
     private void draw(PoseStack poseStack, int left, int top, int right, int bottom, float exp, String levelStr, Font font, boolean flip) {
@@ -25,10 +25,9 @@ public class ExperienceBarOverlay extends BaseOverlay {
     }
 
     @Override
-    public void renderOverlay(ForgeGui gui, PoseStack poseStack, float partialTick, int screenWidth, int screenHeight) {
-        if (gui.getMinecraft().player != null && !gui.getMinecraft().player.isRidingJumpable() && !gui.getMinecraft().options.hideGui) {
+    public void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTick, int screenWidth, int screenHeight) {
+        if (mc.player != null && !mc.player.isRidingJumpable() && !mc.options.hideGui) {
             gui.setupOverlayRenderState(true, false);
-            var mc = gui.getMinecraft();
             if (mc.gameMode == null || !mc.gameMode.hasExperience()) {
                 return;
             }

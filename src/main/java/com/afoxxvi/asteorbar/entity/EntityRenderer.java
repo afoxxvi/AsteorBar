@@ -6,13 +6,13 @@ import com.afoxxvi.asteorbar.utils.Utils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.common.Tags;
 
 public class EntityRenderer {
     private static boolean isBoss(LivingEntity entity) {
-        return entity.getType().is(Tags.EntityTypes.BOSSES);
+        return entity.getType() == EntityType.WITHER || entity.getType() == EntityType.ENDER_DRAGON || entity.getType() == EntityType.ELDER_GUARDIAN;
     }
 
     private static int check(LivingEntity entity, Player player) {
