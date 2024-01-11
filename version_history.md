@@ -1,7 +1,26 @@
 # Version History
 
+## v1.2
+
+2024/01/11
+
+### Features
+
+- **Display living entity's health and absorption.**
+- More configurable options on hud and entity bars.
+- More HUD layout options.
+- KeyBind to toggle HUD.
+- Localization support.
+
+### Adjustments & Fixes
+
+- Add activation packet to assist server-side plugin.
+- Adjusted hunger bar's color.
+
 ## v1.1
+
 2024/01/08
+
 ### Features
 
 - Display armor.

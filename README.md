@@ -1,8 +1,10 @@
 # AsteorBar
 
-A simple mod to display player's status using slim bars.
+A simple mod to display player's status using slim bars and display entity's status using bars.
 
 ## Features
+
+### HUD Overlay
 
 - Vanilla feel. Bars can blink as vanilla hearts do(on regen health, on hurt, and so on).
 - Display health, hunger, mount health and more.
@@ -14,13 +16,31 @@ A simple mod to display player's status using slim bars.
 - Bars will flash when the player has low health or hunger.
 - Configurable. You can change whether to display some bars.
 
+### Entity info
+
+- Display living entity's health and max health.
+- Display absorption of living entity.
+- Very simple with good look.
+- Dynamic color of health bar. The color will change when the entity's health is low.
+- Highly configurable. You can change whether to display bars in many situations. And you can change many properties of the bars(e.g. color,
+  scale, offset...).
+
 ## Notes
 
-To make the mod work on Spigot servers, this [plugin](https://github.com/afoxxvi/AsteorBarServer) is needed for the server.
+Only Chinese and English localization are guaranteed to be correct. If you want to help with the localization, you can create a pull
+request.
+Thanks a lot!
+
+The following features will not take effect on servers because they are not synced in vanilla Minecraft
+
+- Saturation and exhaustion
+- Absorption of living entities
+
+This [plugin](https://github.com/afoxxvi/AsteorBarServer) for Spigot/Paper server can sync saturation and exhaustion to client.
 
 ## Plans
 
-- [ ] Multiple layouts
+- [x] Multiple layouts
 - [x] Exhaustion display
 - [x] Armor display
 - [x] Configurable
@@ -52,3 +72,4 @@ Regeneration effect.
 The mod is inspired by
 
 - [AppleSkin](https://github.com/squeek502/AppleSkin) by squeek502
+- [Neat](https://github.com/VazkiiMods/Neat) by VazkiiMods

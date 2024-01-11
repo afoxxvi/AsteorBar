@@ -1,10 +1,11 @@
-package com.afoxxvi.asteorbar.hud.listener;
+package com.afoxxvi.asteorbar.core;
 
 import com.afoxxvi.asteorbar.AsteorBar;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -30,6 +31,8 @@ public class NetworkHandler {
         //Without special handle for exhaustion, saturation updates correctly.
         //But with it, saturation updates incorrectly. Strange. Now have to sync both.
         CHANNEL.registerMessage(1, SaturationPacket.class, SaturationPacket::encode, SaturationPacket::decode, SaturationPacket::handle);
+        CHANNEL.registerMessage(2, EntityAbsorptionPacket.class, EntityAbsorptionPacket::encode, EntityAbsorptionPacket::decode, EntityAbsorptionPacket::handle);
+        CHANNEL.registerMessage(3, ActivatePacket.class, ActivatePacket::encode, ActivatePacket::decode, ActivatePacket::handle);
     }
 
     @SubscribeEvent
@@ -53,6 +56,30 @@ public class NetworkHandler {
 
     private static Player getPlayer(NetworkEvent.Context context) {
         return context.getDirection() == NetworkDirection.PLAY_TO_SERVER ? context.getSender() : Minecraft.getInstance().player;
+    }
+
+    public static class ActivatePacket {
+        public boolean activate;
+
+        public ActivatePacket(boolean activate) {
+            this.activate = activate;
+        }
+
+        public static void encode(ActivatePacket packet, FriendlyByteBuf buffer) {
+            buffer.writeBoolean(packet.activate);
+        }
+
+        public static ActivatePacket decode(FriendlyByteBuf buffer) {
+            return new ActivatePacket(buffer.readBoolean());
+        }
+
+        public static void handle(ActivatePacket packet, Supplier<NetworkEvent.Context> context) {
+            context.get().enqueueWork(() -> {
+                AsteorBar.LOGGER.info("Received activate packet. Sending back to server.");
+                CHANNEL.sendToServer(new ActivatePacket(true));
+            });
+            context.get().setPacketHandled(true);
+        }
     }
 
     public static class SaturationPacket {
@@ -103,6 +130,38 @@ public class NetworkHandler {
                 if (player != null) {
                     var foodStats = player.getFoodData();
                     foodStats.setExhaustion(packet.exhaustion);
+                }
+            });
+            context.get().setPacketHandled(true);
+        }
+    }
+
+    public static class EntityAbsorptionPacket {
+        public int entityId;
+        public float absorption;
+
+        public EntityAbsorptionPacket(int entityId, float absorption) {
+            this.entityId = entityId;
+            this.absorption = absorption;
+        }
+
+        public static void encode(EntityAbsorptionPacket packet, FriendlyByteBuf buffer) {
+            buffer.writeInt(packet.entityId);
+            buffer.writeFloat(packet.absorption);
+        }
+
+        public static EntityAbsorptionPacket decode(FriendlyByteBuf buffer) {
+            return new EntityAbsorptionPacket(buffer.readInt(), buffer.readFloat());
+        }
+
+        public static void handle(EntityAbsorptionPacket packet, Supplier<NetworkEvent.Context> context) {
+            context.get().enqueueWork(() -> {
+                var player = getPlayer(context.get());
+                if (player != null) {
+                    var entity = player.level.getEntity(packet.entityId);
+                    if (entity instanceof LivingEntity livingEntity) {
+                        livingEntity.setAbsorptionAmount(packet.absorption);
+                    }
                 }
             });
             context.get().setPacketHandled(true);
