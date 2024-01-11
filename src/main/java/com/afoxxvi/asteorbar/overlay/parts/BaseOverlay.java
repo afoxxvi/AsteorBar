@@ -41,6 +41,7 @@ public abstract class BaseOverlay implements IGuiOverlay {
     @Override
     public void render(ForgeGui forgeGui, PoseStack poseStack, float v, int i, int i1) {
         if (AsteorBar.Config.ENABLE_OVERLAY.get()) {
+            GuiHelper.guiComponent = forgeGui;
             renderOverlay(forgeGui, poseStack, v, i, i1);
         }
     }

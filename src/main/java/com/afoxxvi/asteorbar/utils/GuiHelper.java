@@ -7,30 +7,31 @@ import net.minecraft.client.gui.GuiComponent;
 
 @SuppressWarnings("unused")
 public class GuiHelper {
+    public static GuiComponent guiComponent;
     public static void drawTexturedRect(PoseStack poseStack, int left, int top, int textureX, int textureY, int width, int height) {
-        GuiComponent.blit(poseStack, left, top, textureX, textureY, width, height);
+        guiComponent.blit(poseStack, left, top, textureX, textureY, width, height);
     }
 
     public static void drawTexturedRect(PoseStack poseStack, int left, int top, int right, int bottom, int textureX, int textureY, int width, int height) {
         if (right - left == width) {
-            GuiComponent.blit(poseStack, left, top, textureX, textureY, width, height);
+            guiComponent.blit(poseStack, left, top, textureX, textureY, width, height);
         } else if (right - left < width) {
-            GuiComponent.blit(poseStack, left, top, textureX, textureY, right - left - 1, height);
-            GuiComponent.blit(poseStack, right - 1, top, textureX + width - 1, textureY, 1, height);
+            guiComponent.blit(poseStack, left, top, textureX, textureY, right - left - 1, height);
+            guiComponent.blit(poseStack, right - 1, top, textureX + width - 1, textureY, 1, height);
         } else if (right - left > width) {
-            GuiComponent.blit(poseStack, left, top, textureX, textureY, width, height);
+            guiComponent.blit(poseStack, left, top, textureX, textureY, width, height);
         }
     }
 
     public static void drawTextureRectCenterClip(PoseStack poseStack, int left, int top, int right, int bottom, int textureX, int textureY, int width, int height) {
         if (right - left == width) {
-            GuiComponent.blit(poseStack, left, top, textureX, textureY, width, height);
+            guiComponent.blit(poseStack, left, top, textureX, textureY, width, height);
         } else if (right - left < width) {
-            GuiComponent.blit(poseStack, left, top, textureX, textureY, 1, height);
-            GuiComponent.blit(poseStack, left + 1, top, textureX + (width - (right - left - 2)) / 2, textureY, right - left - 2, height);
-            GuiComponent.blit(poseStack, right - 1, top, textureX + width - 1, textureY, 1, height);
+            guiComponent.blit(poseStack, left, top, textureX, textureY, 1, height);
+            guiComponent.blit(poseStack, left + 1, top, textureX + (width - (right - left - 2)) / 2, textureY, right - left - 2, height);
+            guiComponent.blit(poseStack, right - 1, top, textureX + width - 1, textureY, 1, height);
         } else if (right - left > width) {
-            GuiComponent.blit(poseStack, left, top, textureX, textureY, width, height);
+            guiComponent.blit(poseStack, left, top, textureX, textureY, width, height);
         }
     }
 
