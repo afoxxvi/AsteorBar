@@ -3,6 +3,7 @@ package com.afoxxvi.asteorbar.overlay.parts;
 import com.afoxxvi.asteorbar.AsteorBar;
 import com.afoxxvi.asteorbar.utils.GuiHelper;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
@@ -39,70 +40,71 @@ public abstract class BaseOverlay implements IGuiOverlay {
     public static final int Y_ARMOR_BOUND = 207;
 
     @Override
-    public void render(ForgeGui forgeGui, PoseStack poseStack, float v, int i, int i1) {
+    public void render(ForgeGui gui, GuiGraphics guiGraphics, float partialTick, int screenWidth, int screenHeight) {
         if (AsteorBar.Config.ENABLE_OVERLAY.get()) {
-            renderOverlay(forgeGui, poseStack, v, i, i1);
+            GuiHelper.resourceLocation = TEXTURE;
+            renderOverlay(gui, guiGraphics, partialTick, screenWidth, screenHeight);
         }
     }
 
-    protected void drawTextureFillFlip(PoseStack poseStack, int left, int top, int right, int width, int height, int textureX, int textureY, int textureFullWidth, boolean flip) {
+    protected void drawTextureFillFlip(GuiGraphics guiGraphics, int left, int top, int right, int width, int height, int textureX, int textureY, int textureFullWidth, boolean flip) {
         if (flip) {
-            GuiHelper.drawTexturedRect(poseStack, right - width, top, textureX + textureFullWidth - width, textureY, width, height);
+            GuiHelper.drawTexturedRect(guiGraphics, right - width, top, textureX + textureFullWidth - width, textureY, width, height);
         } else {
-            GuiHelper.drawTexturedRect(poseStack, left, top, textureX, textureY, width, height);
+            GuiHelper.drawTexturedRect(guiGraphics, left, top, textureX, textureY, width, height);
         }
     }
 
-    protected void drawTextureFillFlip(PoseStack poseStack, int left, int top, int right, int width, int height, int textureX, int textureY, boolean flip) {
+    protected void drawTextureFillFlip(GuiGraphics guiGraphics, int left, int top, int right, int width, int height, int textureX, int textureY, boolean flip) {
         if (flip) {
-            GuiHelper.drawTexturedRect(poseStack, right - width, top, textureX, textureY, width, height);
+            GuiHelper.drawTexturedRect(guiGraphics, right - width, top, textureX, textureY, width, height);
         } else {
-            GuiHelper.drawTexturedRect(poseStack, left, top, textureX, textureY, width, height);
+            GuiHelper.drawTexturedRect(guiGraphics, left, top, textureX, textureY, width, height);
         }
     }
 
-    protected void drawTextureBoundClipCenter(PoseStack poseStack, int left, int top, int right, int bottom, int height, int textureX, int textureY, int textureFullWidth) {
+    protected void drawTextureBoundClipCenter(GuiGraphics guiGraphics, int left, int top, int right, int bottom, int height, int textureX, int textureY, int textureFullWidth) {
         if (textureFullWidth == right - left) {
-            GuiHelper.drawTexturedRect(poseStack, left, top, right, bottom, textureX, textureY, textureFullWidth, height);
+            GuiHelper.drawTexturedRect(guiGraphics, left, top, right, bottom, textureX, textureY, textureFullWidth, height);
         } else {
-            GuiHelper.drawTextureRectCenterClip(poseStack, left, top, right, bottom, textureX, textureY, textureFullWidth, height);
+            GuiHelper.drawTextureRectCenterClip(guiGraphics, left, top, right, bottom, textureX, textureY, textureFullWidth, height);
         }
     }
 
-    protected void drawTextureBoundClipCenterFlip(PoseStack poseStack, int left, int top, int right, int bottom, int width, int height, int textureX, int textureY, int textureFullWidth, boolean flip) {
+    protected void drawTextureBoundClipCenterFlip(GuiGraphics guiGraphics, int left, int top, int right, int bottom, int width, int height, int textureX, int textureY, int textureFullWidth, boolean flip) {
         if (width == right - left) {
-            GuiHelper.drawTextureRectCenterClip(poseStack, left, top, right, bottom, textureX, textureY, textureFullWidth, height);
+            GuiHelper.drawTextureRectCenterClip(guiGraphics, left, top, right, bottom, textureX, textureY, textureFullWidth, height);
         } else {
             var offset = (textureFullWidth - (right - left)) / 2;
             if (flip) {
                 if (width > 0) {
-                    GuiHelper.drawTexturedRect(poseStack, right - 1, top, textureX + textureFullWidth - 1, textureY, 1, height);
+                    GuiHelper.drawTexturedRect(guiGraphics, right - 1, top, textureX + textureFullWidth - 1, textureY, 1, height);
                 }
                 if (width > 1) {
-                    GuiHelper.drawTexturedRect(poseStack, right - 1 - (width - 1), top, textureX + 1 + offset + right - left - 2 - (width - 1), textureY, width - 1, height);
+                    GuiHelper.drawTexturedRect(guiGraphics, right - 1 - (width - 1), top, textureX + 1 + offset + right - left - 2 - (width - 1), textureY, width - 1, height);
                 }
             } else {
                 if (width > 0) {
-                    GuiHelper.drawTexturedRect(poseStack, left, top, textureX, textureY, 1, height);
+                    GuiHelper.drawTexturedRect(guiGraphics, left, top, textureX, textureY, 1, height);
                 }
                 if (width > 1) {
-                    GuiHelper.drawTexturedRect(poseStack, left + 1, top, textureX + 1 + offset, textureY, width - 1, height);
+                    GuiHelper.drawTexturedRect(guiGraphics, left + 1, top, textureX + 1 + offset, textureY, width - 1, height);
                 }
             }
         }
     }
 
-    protected void drawTextureBoundFlip(PoseStack poseStack, int left, int top, int right, int bottom, int width, int height, int textureX, int textureY, int textureFullWidth, boolean flip) {
+    protected void drawTextureBoundFlip(GuiGraphics guiGraphics, int left, int top, int right, int bottom, int width, int height, int textureX, int textureY, int textureFullWidth, boolean flip) {
         if (width == right - left) {
-            GuiHelper.drawTexturedRect(poseStack, left, top, right, bottom, textureX, textureY, textureFullWidth, height);
+            GuiHelper.drawTexturedRect(guiGraphics, left, top, right, bottom, textureX, textureY, textureFullWidth, height);
         } else {
             if (flip) {
-                GuiHelper.drawTexturedRect(poseStack, right - width, top, textureX + textureFullWidth - width, textureY, width, height);
+                GuiHelper.drawTexturedRect(guiGraphics, right - width, top, textureX + textureFullWidth - width, textureY, width, height);
             } else {
-                GuiHelper.drawTexturedRect(poseStack, left, top, textureX, textureY, width, height);
+                GuiHelper.drawTexturedRect(guiGraphics, left, top, textureX, textureY, width, height);
             }
         }
     }
 
-    public abstract void renderOverlay(ForgeGui forgeGui, PoseStack poseStack, float v, int i, int i1);
+    public abstract void renderOverlay(ForgeGui forgeGui, GuiGraphics guiGraphics, float v, int i, int i1);
 }

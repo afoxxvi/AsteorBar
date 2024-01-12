@@ -123,15 +123,15 @@ public class EntityRenderer {
                 var font = Minecraft.getInstance().font;
                 //health
                 var healthStr = Utils.formatNumber(entity.getHealth()) + "/" + Utils.formatNumber(entity.getMaxHealth());
-                GuiHelper.renderCenteredString(poseStack, healthStr, 0, 0, 0xffffff);
+                GuiHelper.renderCenteredString(poseStack, multiBufferSource, healthStr, 0, 0, 0xffffff);
                 //absorption
                 if (entity.getAbsorptionAmount() > 0) {
                     var absStr = Utils.formatNumber(entity.getAbsorptionAmount());
-                    GuiHelper.renderString(poseStack, absStr, (int) ((-halfWidth + 1) / textScale), 0, 0xffff00);
+                    GuiHelper.renderString(poseStack, multiBufferSource, absStr, (int) ((-halfWidth + 1) / textScale), 0, 0xffff00);
                 }
                 if (renderAbsorptionMultiplier > 0) {
                     var absStr = renderAbsorptionMultiplier + "×";
-                    GuiHelper.renderString(poseStack, absStr, (int) ((-halfWidth - 1 - font.width(absStr)) / textScale), 0, 0xffff00);
+                    GuiHelper.renderString(poseStack, multiBufferSource, absStr, (int) ((-halfWidth - 1 - font.width(absStr)) / textScale), 0, 0xffff00);
                 }
                 poseStack.popPose();
             }

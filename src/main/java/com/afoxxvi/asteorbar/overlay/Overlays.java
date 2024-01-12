@@ -5,6 +5,7 @@ import com.afoxxvi.asteorbar.overlay.parts.*;
 import com.afoxxvi.asteorbar.utils.GuiHelper;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,23 +43,15 @@ public class Overlays {
         stringRenders.clear();
     }
 
-    public static void renderString(PoseStack poseStack) {
+    public static void renderString(GuiGraphics guiGraphics) {
         if (stringRenders == null) return;
         var font = Minecraft.getInstance().font;
         for (var render : stringRenders) {
             var width = font.width(render.text);
-            if (render.shadow) {
-                switch (render.align) {
-                    case ALIGN_LEFT -> GuiHelper.drawString(poseStack, render.text, render.x, render.y, render.color);
-                    case ALIGN_CENTER -> GuiHelper.drawCenteredString(poseStack, render.text, render.x, render.y, render.color);
-                    case ALIGN_RIGHT -> GuiHelper.drawString(poseStack, render.text, render.x - width, render.y, render.color);
-                }
-            } else {
-                switch (render.align) {
-                    case ALIGN_LEFT -> font.draw(poseStack, render.text, render.x, render.y, render.color);
-                    case ALIGN_CENTER -> font.draw(poseStack, render.text, render.x - width / 2F, render.y, render.color);
-                    case ALIGN_RIGHT -> font.draw(poseStack, render.text, render.x - width, render.y, render.color);
-                }
+            switch (render.align) {
+                case ALIGN_LEFT -> GuiHelper.drawString(guiGraphics, render.text, render.x, render.y, render.color, render.shadow);
+                case ALIGN_CENTER -> GuiHelper.drawString(guiGraphics, render.text, (int) (render.x - width / 2.0), render.y, render.color, render.shadow);
+                case ALIGN_RIGHT -> GuiHelper.drawString(guiGraphics, render.text, render.x - width, render.y, render.color, render.shadow);
             }
         }
         stringRenders.clear();
