@@ -26,7 +26,7 @@ public class ExperienceBarOverlay extends BaseOverlay {
 
     @Override
     public void renderOverlay(ForgeGui gui, PoseStack poseStack, float partialTick, int screenWidth, int screenHeight) {
-        if (gui.getMinecraft().player != null && !gui.getMinecraft().player.isRidingJumpable() && !gui.getMinecraft().options.hideGui) {
+        if (gui.getMinecraft().player != null && gui.getMinecraft().player.jumpableVehicle() == null && !gui.getMinecraft().options.hideGui) {
             gui.setupOverlayRenderState(true, false);
             var mc = gui.getMinecraft();
             if (mc.gameMode == null || !mc.gameMode.hasExperience()) {
