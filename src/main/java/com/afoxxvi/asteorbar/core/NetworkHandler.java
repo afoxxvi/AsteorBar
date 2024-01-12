@@ -68,7 +68,7 @@ public class NetworkHandler {
             Float oldSaturation = SATURATION.get(player.getUUID());
             if (oldSaturation == null || Math.abs(oldSaturation - saturationLevel) >= 0.01F) {
                 SATURATION.put(player.getUUID(), saturationLevel);
-                CHANNEL.send(new ExhaustionPacket(exhaustionLevel), PacketDistributor.PLAYER.with(player));
+                CHANNEL.send(new SaturationPacket(saturationLevel), PacketDistributor.PLAYER.with(player));
             }
         }
     }
