@@ -8,31 +8,50 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.network.ChannelBuilder;
 import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.simple.SimpleChannel;
+import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.network.SimpleChannel;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 public class NetworkHandler {
-    private static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(new ResourceLocation(AsteorBar.MOD_ID, "network"), () -> "1.0", s -> true, s -> true);
+    private static final SimpleChannel CHANNEL = ChannelBuilder
+            .named(new ResourceLocation(AsteorBar.MOD_ID, "network"))
+            .networkProtocolVersion(1)
+            .optional()
+            .acceptedVersions((status, version) -> true)
+            .simpleChannel();
 
     //avoid sending packets too frequently
     private static final Map<UUID, Float> EXHAUSTION = new HashMap<>();
     private static final Map<UUID, Float> SATURATION = new HashMap<>();
 
     public static void init() {
-        CHANNEL.registerMessage(0, ExhaustionPacket.class, ExhaustionPacket::encode, ExhaustionPacket::decode, ExhaustionPacket::handle);
-        //Without special handle for exhaustion, saturation updates correctly.
-        //But with it, saturation updates incorrectly. Strange. Now have to sync both.
-        CHANNEL.registerMessage(1, SaturationPacket.class, SaturationPacket::encode, SaturationPacket::decode, SaturationPacket::handle);
-        CHANNEL.registerMessage(2, EntityAbsorptionPacket.class, EntityAbsorptionPacket::encode, EntityAbsorptionPacket::decode, EntityAbsorptionPacket::handle);
-        CHANNEL.registerMessage(3, ActivatePacket.class, ActivatePacket::encode, ActivatePacket::decode, ActivatePacket::handle);
+        CHANNEL.messageBuilder(ExhaustionPacket.class, 0)
+                .encoder(ExhaustionPacket::encode)
+                .decoder(ExhaustionPacket::decode)
+                .consumerNetworkThread(ExhaustionPacket::handle)
+                .add();
+        CHANNEL.messageBuilder(SaturationPacket.class, 1)
+                .encoder(SaturationPacket::encode)
+                .decoder(SaturationPacket::decode)
+                .consumerNetworkThread(SaturationPacket::handle)
+                .add();
+        CHANNEL.messageBuilder(EntityAbsorptionPacket.class, 2)
+                .encoder(EntityAbsorptionPacket::encode)
+                .decoder(EntityAbsorptionPacket::decode)
+                .consumerNetworkThread(EntityAbsorptionPacket::handle)
+                .add();
+        CHANNEL.messageBuilder(ActivatePacket.class, 3)
+                .encoder(ActivatePacket::encode)
+                .decoder(ActivatePacket::decode)
+                .consumerNetworkThread(ActivatePacket::handle)
+                .add();
     }
 
     @SubscribeEvent
@@ -43,18 +62,18 @@ public class NetworkHandler {
             Float oldExhaustion = EXHAUSTION.get(player.getUUID());
             if (oldExhaustion == null || Math.abs(oldExhaustion - exhaustionLevel) >= 0.01F) {
                 EXHAUSTION.put(player.getUUID(), exhaustionLevel);
-                CHANNEL.sendTo(new ExhaustionPacket(exhaustionLevel), player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
+                CHANNEL.send(new ExhaustionPacket(exhaustionLevel), PacketDistributor.PLAYER.with(player));
             }
             float saturationLevel = foodStats.getSaturationLevel();
             Float oldSaturation = SATURATION.get(player.getUUID());
             if (oldSaturation == null || Math.abs(oldSaturation - saturationLevel) >= 0.01F) {
                 SATURATION.put(player.getUUID(), saturationLevel);
-                CHANNEL.sendTo(new SaturationPacket(saturationLevel), player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
+                CHANNEL.send(new ExhaustionPacket(exhaustionLevel), PacketDistributor.PLAYER.with(player));
             }
         }
     }
 
-    private static Player getPlayer(NetworkEvent.Context context) {
+    private static Player getPlayer(CustomPayloadEvent.Context context) {
         return context.getDirection() == NetworkDirection.PLAY_TO_SERVER ? context.getSender() : Minecraft.getInstance().player;
     }
 
@@ -73,12 +92,12 @@ public class NetworkHandler {
             return new ActivatePacket(buffer.readBoolean());
         }
 
-        public static void handle(ActivatePacket packet, Supplier<NetworkEvent.Context> context) {
-            context.get().enqueueWork(() -> {
+        public static void handle(ActivatePacket packet, CustomPayloadEvent.Context context) {
+            context.enqueueWork(() -> {
                 AsteorBar.LOGGER.info("Received activate packet. Sending back to server.");
-                CHANNEL.sendToServer(new ActivatePacket(true));
+                CHANNEL.send(new ActivatePacket(true), PacketDistributor.SERVER.noArg());
             });
-            context.get().setPacketHandled(true);
+            context.setPacketHandled(true);
         }
     }
 
@@ -97,15 +116,15 @@ public class NetworkHandler {
             return new SaturationPacket(buffer.readFloat());
         }
 
-        public static void handle(SaturationPacket packet, Supplier<NetworkEvent.Context> context) {
-            context.get().enqueueWork(() -> {
-                var player = getPlayer(context.get());
+        public static void handle(SaturationPacket packet, CustomPayloadEvent.Context context) {
+            context.enqueueWork(() -> {
+                var player = getPlayer(context);
                 if (player != null) {
                     var foodStats = player.getFoodData();
                     foodStats.setSaturation(packet.saturation);
                 }
             });
-            context.get().setPacketHandled(true);
+            context.setPacketHandled(true);
         }
     }
 
@@ -124,15 +143,15 @@ public class NetworkHandler {
             return new ExhaustionPacket(buffer.readFloat());
         }
 
-        public static void handle(ExhaustionPacket packet, Supplier<NetworkEvent.Context> context) {
-            context.get().enqueueWork(() -> {
-                var player = getPlayer(context.get());
+        public static void handle(ExhaustionPacket packet, CustomPayloadEvent.Context context) {
+            context.enqueueWork(() -> {
+                var player = getPlayer(context);
                 if (player != null) {
                     var foodStats = player.getFoodData();
                     foodStats.setExhaustion(packet.exhaustion);
                 }
             });
-            context.get().setPacketHandled(true);
+            context.setPacketHandled(true);
         }
     }
 
@@ -154,9 +173,9 @@ public class NetworkHandler {
             return new EntityAbsorptionPacket(buffer.readInt(), buffer.readFloat());
         }
 
-        public static void handle(EntityAbsorptionPacket packet, Supplier<NetworkEvent.Context> context) {
-            context.get().enqueueWork(() -> {
-                var player = getPlayer(context.get());
+        public static void handle(EntityAbsorptionPacket packet, CustomPayloadEvent.Context context) {
+            context.enqueueWork(() -> {
+                var player = getPlayer(context);
                 if (player != null) {
                     var entity = player.level().getEntity(packet.entityId);
                     if (entity instanceof LivingEntity livingEntity) {
@@ -164,7 +183,7 @@ public class NetworkHandler {
                     }
                 }
             });
-            context.get().setPacketHandled(true);
+            context.setPacketHandled(true);
         }
     }
 }
