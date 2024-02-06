@@ -40,7 +40,7 @@ public class EntityRenderer {
         }
         var dist = entity.distanceTo(player);
         //The layers will start to flash if too close
-        var layerDist = dist * 0.001F;
+        var layerDist = Math.max(0.002F, dist * 0.002F);
         poseStack.pushPose();
         poseStack.translate(0, entity.getBbHeight() + AsteorBar.Config.HEALTH_BAR_OFFSET_Y.get(), 0);
         poseStack.mulPose(Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation());
