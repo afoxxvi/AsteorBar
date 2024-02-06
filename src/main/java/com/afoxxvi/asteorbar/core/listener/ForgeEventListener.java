@@ -26,13 +26,6 @@ public class ForgeEventListener {
     }
 
     @SubscribeEvent
-    public static void onEntityRender(RenderLivingEvent.Post<?, ?> event) {
-        if (AsteorBar.Config.ENABLE_HEALTH_BAR.get()) {
-            EntityRenderer.render(event.getEntity(), event.getPoseStack(), event.getMultiBufferSource());
-        }
-    }
-
-    @SubscribeEvent
     public static void onRenderPre(RenderGameOverlayEvent.Pre event) {
         if (event.getType() == RenderGameOverlayEvent.ElementType.ALL) {
             if (!ModEventListener.registerOverlay) ModEventListener.registerOverlays();

@@ -40,7 +40,7 @@ public class EntityRenderer {
         }
         var dist = entity.distanceTo(player);
         //The layers will start to flash if too close
-        var layerDist = dist * 0.001F;
+        var layerDist = Math.max(0.002F, dist * 0.002F);
         poseStack.pushPose();
         poseStack.translate(0, entity.getBbHeight() + AsteorBar.Config.HEALTH_BAR_OFFSET_Y.get(), 0);
         poseStack.mulPose(Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation());
@@ -123,15 +123,15 @@ public class EntityRenderer {
                 var font = Minecraft.getInstance().font;
                 //health
                 var healthStr = Utils.formatNumber(entity.getHealth()) + "/" + Utils.formatNumber(entity.getMaxHealth());
-                GuiHelper.renderCenteredString(poseStack, healthStr, 0, 0, 0xffffff);
+                GuiHelper.renderCenteredString(poseStack, healthStr, 0, 0, 0xffffff, multiBufferSource);
                 //absorption
                 if (entity.getAbsorptionAmount() > 0) {
                     var absStr = Utils.formatNumber(entity.getAbsorptionAmount());
-                    GuiHelper.renderString(poseStack, absStr, (int) ((-halfWidth + 1) / textScale), 0, 0xffff00);
+                    GuiHelper.renderString(poseStack, absStr, (int) ((-halfWidth + 1) / textScale), 0, 0xffff00, multiBufferSource);
                 }
                 if (renderAbsorptionMultiplier > 0) {
                     var absStr = renderAbsorptionMultiplier + "×";
-                    GuiHelper.renderString(poseStack, absStr, (int) ((-halfWidth - 1 - font.width(absStr)) / textScale), 0, 0xffff00);
+                    GuiHelper.renderString(poseStack, absStr, (int) ((-halfWidth - 1 - font.width(absStr)) / textScale), 0, 0xffff00, multiBufferSource);
                 }
                 poseStack.popPose();
             }
