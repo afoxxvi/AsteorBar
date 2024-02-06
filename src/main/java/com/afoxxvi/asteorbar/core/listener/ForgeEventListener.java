@@ -27,13 +27,6 @@ public class ForgeEventListener {
     }
 
     @SubscribeEvent
-    public static void onEntityRender(RenderLivingEvent.Post<?, ?> event) {
-        if (AsteorBar.Config.ENABLE_HEALTH_BAR.get()) {
-            EntityRenderer.render(event.getEntity(), event.getPoseStack(), event.getMultiBufferSource());
-        }
-    }
-
-    @SubscribeEvent
     public static void disableVanillaOverlays(RenderGuiOverlayEvent.Pre event) {
         if (!AsteorBar.Config.ENABLE_OVERLAY.get()) return;
         NamedGuiOverlay overlay = event.getOverlay();
