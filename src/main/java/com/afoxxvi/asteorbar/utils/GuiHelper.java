@@ -1,9 +1,12 @@
 package com.afoxxvi.asteorbar.utils;
 
+import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.renderer.MultiBufferSource;
 
 @SuppressWarnings("unused")
 public class GuiHelper {
@@ -76,12 +79,12 @@ public class GuiHelper {
         renderSolid(vertexConsumer, poseStack, left, bottom - part, right, bottom, Utils.modifyColor(color, 215), z);
     }
 
-    public static void renderString(PoseStack poseStack, String string, int left, int top, int color) {
-        Minecraft.getInstance().font.draw(poseStack, string, left, top, color);
+    public static void renderString(PoseStack poseStack, String string, int left, int top, int color, MultiBufferSource bufferSource) {
+        Minecraft.getInstance().font.drawInBatch(string, left, top, color, false, poseStack.last().pose(), bufferSource, false, 0, 0xF000F0);
     }
 
-    public static void renderCenteredString(PoseStack poseStack, String string, int left, int top, int color) {
-        Minecraft.getInstance().font.draw(poseStack, string, left - Minecraft.getInstance().font.width(string) / 2.0f, top, color);
+    public static void renderCenteredString(PoseStack poseStack, String string, int left, int top, int color, MultiBufferSource bufferSource) {
+        renderString(poseStack, string, (int) (left - Minecraft.getInstance().font.width(string) / 2.0f), top, color, bufferSource);
     }
 
 
