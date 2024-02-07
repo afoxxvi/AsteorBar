@@ -50,10 +50,10 @@ public class EntityRenderer {
             var halfWidth = AsteorBar.Config.HEALTH_BAR_HALF_WIDTH.get();
             var halfHeight = AsteorBar.Config.HEALTH_BAR_HALF_HEIGHT.get();
             poseStack.scale(-scale, -scale, scale);
+            var bufferBuilder = multiBufferSource.getBuffer(AsteorBarRenderType.RENDER_TYPE);
             {//render health bar
                 var healthRate = Math.min(entity.getHealth() / entity.getMaxHealth(), 1.0);
                 var healthWidth = (int) (halfWidth * 2 * healthRate);
-                var bufferBuilder = multiBufferSource.getBuffer(AsteorBarRenderType.RENDER_TYPE);
                 int colorHealth;
                 if (AsteorBar.Config.HEALTH_BAR_HEALTH_COLOR_DYNAMIC.get()) {
                     colorHealth = Utils.mixColor(AsteorBar.Config.HEALTH_BAR_HEALTH_COLOR_FULL.get(), AsteorBar.Config.HEALTH_BAR_HEALTH_COLOR_EMPTY.get(), healthRate);
@@ -65,7 +65,7 @@ public class EntityRenderer {
                     GuiHelper.renderSolidGradient(bufferBuilder, poseStack, -halfWidth, -halfHeight, -halfWidth + healthWidth, halfHeight, colorHealth, layerDist);
                 }
                 if (healthWidth < 2 * halfWidth) {
-                    GuiHelper.renderSolidGradient(bufferBuilder, poseStack, -halfWidth + healthWidth, -halfHeight, halfWidth, halfHeight, colorEmpty, layerDist);
+                    GuiHelper.renderSolidGradientUpDown(bufferBuilder, poseStack, -halfWidth + healthWidth, -halfHeight, halfWidth, halfHeight, colorEmpty, layerDist);
                 }
             }
             int renderAbsorptionMultiplier = -1;
@@ -80,7 +80,6 @@ public class EntityRenderer {
                     absorptionWidth = 2 * halfWidth + 2;
                     absorptionNum--;
                 }
-                var bufferBuilder = multiBufferSource.getBuffer(AsteorBarRenderType.RENDER_TYPE);
                 var cut = 0;
                 final var boundWidth = AsteorBar.Config.HEALTH_BAR_BOUND_WIDTH.get();
                 var expand = AsteorBar.Config.HEALTH_BAR_BOUND_VERTEX.get() ? boundWidth : 0;
