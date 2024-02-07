@@ -38,19 +38,35 @@ The following features will not take effect on servers because they are not sync
 
 This [plugin](https://github.com/afoxxvi/AsteorBarServer) for Spigot/Paper server can sync saturation and exhaustion to client.
 
-## Plans
+## Supported Minecraft versions and mod loaders
 
-- [x] Multiple layouts
-- [x] Exhaustion display
-- [x] Armor display
-- [x] Configurable
-- [ ] Support some older versions(1.16.5, 1.14.4...)
+| Version | Forge | Fabric | NeoForge |
+|---------|-------|--------|----------|
+| 1.18.2  |       |        |          |
+| 1.19.2  |       |        |          |
+| 1.19.3  |       |        |          |
+| 1.19.4  |       |        |          |
+| 1.20    |       |        |          |
+| 1.20.1  |       |        |          |
+| 1.20.2  |       |        |          |
+| 1.20.3  |       |        |          |
+| 1.20.4  |       |        |          |
 
-The following features are not planned to be implemented by now.
+## Compatibility
 
-- [ ] Fabric API support
-- [ ] Color customization
-- [ ] Very old versions support(<1.12.2)
+- [ ] [Tough As Nails](https://www.curseforge.com/minecraft/mc-mods/tough-as-nails)
+- [ ] [Thirst Was Taken](https://www.curseforge.com/minecraft/mc-mods/thirst-was-taken)
+
+| Version | Tough As Nails | Thirst Was Taken |
+|---------|----------------|------------------|
+| 1.18.2  |                |                  |
+| 1.19.2  |                |                  |
+| 1.19.4  |                |                  |
+| 1.20    |                |                  |
+| 1.20.1  |                |                  |
+| 1.20.2  |                |                  |
+| 1.20.3  |                |                  |
+| 1.20.4  |                |                  |
 
 ## Screenshots
 

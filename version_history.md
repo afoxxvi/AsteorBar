@@ -1,5 +1,14 @@
 # Version History
 
+## v1.2.1
+2024/02/07
+
+### Adjustments & Fixes
+
+- Changed health bar's render time in forge version, now should be more compatible with mod entities.
+- Added a lightmap to display health bar correctly with shader packs.
+- Fixed text display in 1.18 and 1.19.
+
 ## v1.2
 
 2024/01/11
