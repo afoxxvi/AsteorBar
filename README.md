@@ -1,6 +1,7 @@
 # AsteorBar
 
 A simple mod to display player's status using slim bars and display entity's status using bars.
+ARCHIVED, Moved to [new repository](https://github.com/afoxxvi/AsteorBarMod)
 
 ## Features
 
